@@ -22,11 +22,14 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - run: sudo apt-get update
-      - run: sudo apt-get -y install postgresql-client
-      - run: whoami
-      - run: sudo chown -R circleci:circleci /usr/local/bin
-      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.8/site-packages
+      - run: 
+          name: Setup Project Environment
+          command: |
+            sudo apt-get update
+            sudo apt-get -y install postgresql-client
+            whoami
+            sudo chown -R circleci:circleci /usr/local/bin
+            sudo chown -R circleci:circleci /usr/local/lib/python3.8/site-packages
       - restore_cache:
           key: deps9-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
@@ -40,6 +43,7 @@ jobs:
             - "/usr/local/bin"
             - "/usr/local/lib/python3.8/site-packages"
       - run:
+          name: Run Coverage Build
           command: |
               virtualenv venv
               . venv/bin/activate
